@@ -59,7 +59,7 @@ public class SDKAPIClient implements APIClient {
     
     private SLIClient sdkClient;
     private String gracePeriod;
-
+    
     /**
      * Wrapper for value for the custom store - value is expected json object vs primitive
      * 
@@ -326,7 +326,7 @@ public class SDKAPIClient implements APIClient {
         // get schools
         List<GenericEntity> schools = this.readEntityList(token,
                 SDKConstants.SCHOOLS_ENTITY + "?" + this.buildQueryString(null));
-
+        
         return schools;
     }
     
@@ -358,7 +358,7 @@ public class SDKAPIClient implements APIClient {
             edOrgs.addAll(this.readEntityList(token,
                     SDKConstants.STAFF_ENTITY + getId(token) + SDKConstants.STAFF_EDORG_ASSIGNMENT_ASSOC
                             + SDKConstants.EDORGS_ENTITY + "?" + this.buildQueryString(null)));
-
+            
             for (int i = 0; i < edOrgs.size(); ++i) {
                 GenericEntity edOrg = edOrgs.get(i);
                 Map<String, String> query = new HashMap<String, String>();
@@ -379,7 +379,7 @@ public class SDKAPIClient implements APIClient {
         
         return schools;
     }
-
+    
     /**
      * Get a list of schools using a list of ids
      * 
@@ -1099,7 +1099,7 @@ public class SDKAPIClient implements APIClient {
         List<GenericEntity> entityList = new ArrayList<GenericEntity>();
         
         try {
-          sdkClient.read(token, entityList, url, GenericEntity.class);
+            sdkClient.read(token, entityList, url, GenericEntity.class);
         } catch (Exception e) {
             LOGGER.error("Exception occurred during API read", e);
         }
@@ -1153,7 +1153,7 @@ public class SDKAPIClient implements APIClient {
     @ExecutionTimeLogger.LogExecutionTime
     protected void createEntity(String token, String url, GenericEntity entity) {
         try {
-         sdkClient.create(token, url, entity);
+            sdkClient.create(token, url, entity);
         } catch (Exception e) {
             LOGGER.error("Exception occurred during API create", e);
         }
@@ -1170,7 +1170,7 @@ public class SDKAPIClient implements APIClient {
     @ExecutionTimeLogger.LogExecutionTime
     protected void updateEntity(String token, String url, GenericEntity entity) {
         try {
-          sdkClient.update(token, url, entity);
+            sdkClient.update(token, url, entity);
         } catch (Exception e) {
             LOGGER.error("Exception occurred during API update", e);
         }
@@ -1418,26 +1418,32 @@ public class SDKAPIClient implements APIClient {
         // iterate each section
         if (sections != null) {
             
-            Map<String, String> courseOfferingToCourseIDMap = new HashMap<String, String>();
-            
-            // find the course for each course offering
-            List<GenericEntity> courseOfferings = readEntityList(token,
-                    SDKConstants.COURSE_OFFERINGS + "?" + this.buildQueryString(null));
-            if (courseOfferings != null) {
-                for (GenericEntity courseOffering : courseOfferings) {
-                    // Get course using courseId reference in section
-                    String courseOfferingId = (String) courseOffering.get(Constants.ATTR_ID);
-                    String courseId = (String) courseOffering.get(Constants.ATTR_COURSE_ID);
-                    courseOfferingToCourseIDMap.put(courseOfferingId, courseId);
-                }
-            }
+            // Course Offering does not exist in alpha.0 verion of API
+            /*
+             * Map<String, String> courseOfferingToCourseIDMap = new HashMap<String, String>();
+             * 
+             * // find the course for each course offering
+             * List<GenericEntity> courseOfferings = readEntityList(token,
+             * SDKConstants.COURSE_OFFERINGS + "?" + this.buildQueryString(null));
+             * if (courseOfferings != null) {
+             * for (GenericEntity courseOffering : courseOfferings) {
+             * // Get course using courseId reference in section
+             * String courseOfferingId = (String) courseOffering.get(Constants.ATTR_ID);
+             * String courseId = (String) courseOffering.get(Constants.ATTR_COURSE_ID);
+             * courseOfferingToCourseIDMap.put(courseOfferingId, courseId);
+             * }
+             * }
+             */
             
             for (GenericEntity section : sections) {
                 // Get course using courseId reference in section
-                String courseOfferingId = (String) section.get(Constants.ATTR_COURSE_OFFERING_ID);
-                String courseId = courseOfferingToCourseIDMap.get(courseOfferingId);
+                // Do not use courseOffering until API is on alpha.1
+                // String courseOfferingId = (String)section.get(Constants.ATTR_COURSE_OFFERING_ID);
+                // String courseId = courseOfferingToCourseIDMap.get(courseOfferingId);
+                String courseId = (String) section.get(Constants.ATTR_COURSE_ID);
                 if (!sectionLookup.containsKey(courseId)) {
-                    sectionLookup.put(courseId, new TreeSet<GenericEntity>(new GenericEntityComparator(Constants.ATTR_SECTION_NAME, String.class)));
+                    // sectionLookup.put(courseId, new TreeSet<GenericEntity>(new GenericEntityComparator(Constants.ATTR_SECTION_NAME, String.class)));
+                    sectionLookup.put(courseId, new HashSet<GenericEntity>());
                 }
                 sectionLookup.get(courseId).add(section);
             }
@@ -1445,7 +1451,7 @@ public class SDKAPIClient implements APIClient {
             // get course Entity
             List<GenericEntity> courses = readEntityList(token,
                     SDKConstants.COURSES_ENTITY + "?" + this.buildQueryString(null));
-
+            
             // update courseMap with courseId. "id" for this entity
             for (GenericEntity course : courses) {
                 // Add course to courseMap
@@ -1465,12 +1471,12 @@ public class SDKAPIClient implements APIClient {
             }
             
         }
-
+        
         List<GenericEntity> courses = new ArrayList<GenericEntity>(courseMap.values());
         Collections.sort(courses, new GenericEntityComparator(Constants.ATTR_COURSE_TITLE, String.class));
         return courses;
     }
-
+    
     /**
      * Get the associations between courses and sections
      */
@@ -1511,14 +1517,14 @@ public class SDKAPIClient implements APIClient {
             // get course Entities
             List<GenericEntity> courses = getCourses(token, courseIds, null);
             Collections.sort(courses, new Comparator<GenericEntity>() {
-
+                
                 @Override
                 public int compare(GenericEntity o1, GenericEntity o2) {
                     return o1.getString("coursesName").compareTo(o2.getString("coursesName"));
                 }
-
+                
             });
-
+            
             // update courseMap with courseId. "id" for this entity
             for (GenericEntity course : courses) {
                 // Add course to courseMap
