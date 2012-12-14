@@ -47,7 +47,7 @@ public class TreeGridDataBuilder {
      * @param subLevels
      * @return
      */
-    static public List<GenericEntity> build(List<GenericEntity> entities, List<String> subLevels) {
+    public static List<GenericEntity> build(List<GenericEntity> entities, List<String> subLevels) {
 
         List<GenericEntity> treeGrid = new ArrayList<GenericEntity>();
 
@@ -69,12 +69,12 @@ public class TreeGridDataBuilder {
      * @param level
      */
     @SuppressWarnings("unchecked")
-    static private void buildLevel(List<GenericEntity> treeGrid, GenericEntity entity, String parentId, List<String> subLevels, int level) {
+    private static void buildLevel(List<GenericEntity> treeGrid, GenericEntity entity, String parentId, List<String> subLevels, int level) {
 
         // add entity to tree grid
         entity.put(LEVEL, level);
         if (parentId == null) {
-            entity.put(PARENT, "");
+            entity.put(PARENT, "null");
         } else {
             entity.put(PARENT, parentId);
         }

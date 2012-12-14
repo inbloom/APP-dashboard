@@ -20,7 +20,6 @@ package org.slc.sli.dashboard.client;
 import java.util.List;
 import java.util.Map;
 
-import org.slc.sli.api.client.SLIClient;
 import org.slc.sli.dashboard.entity.ConfigMap;
 import org.slc.sli.dashboard.entity.GenericEntity;
 
@@ -32,13 +31,6 @@ import org.slc.sli.dashboard.entity.GenericEntity;
  *
  */
 public interface APIClient {
-
-    /**
-     * Get the SDK client
-     *
-     * @return
-     */
-    public SLIClient getSdkClient();
 
     /**
      * Get the SLI configured grace period for historical access
@@ -171,10 +163,10 @@ public interface APIClient {
      * @return
      */
     public List<GenericEntity> getSchools(String token, List<String> ids);
-    
+
     /**
      * Get a list of all associated schools
-     * 
+     *
      * @param token
      * @return
      */
@@ -206,7 +198,7 @@ public interface APIClient {
      * @param params
      * @return
      */
-    public List<GenericEntity> getSessions(String token, Map<String, String> params);
+    public List<GenericEntity> getSessions(String token, String schoolId, Map<String, String> params);
 
     /**
      * Get a list of sessions using a list of ids
@@ -335,7 +327,7 @@ public interface APIClient {
      *            Query params
      * @return
      */
-    //public List<GenericEntity> getStudentTranscriptAssociations(final String token, final String studentId,
+    //public List<GenericEntity> getCourseTranscripts(final String token, final String studentId,
     //        Map<String, String> params);
 
 
@@ -437,6 +429,15 @@ public interface APIClient {
      */
     public GenericEntity getTeacher(String token, String id);
 
+
+    /**
+     * Similar to getTeacher, but also returns all the sections associated with the teacher.
+     * @param token
+     * @param id
+     * @return
+     */
+    public GenericEntity getTeacherWithSections(String token, String id);
+
     /**
      * Get the teacher for a specified section
      *
@@ -445,6 +446,15 @@ public interface APIClient {
      * @return
      */
     public GenericEntity getTeacherForSection(String token, String sectionId);
+
+    /**
+     * Get a list of teachers for a specific school
+     *
+     * @param token
+     * @param schoolId
+     * @return
+     */
+    public List<GenericEntity> getTeachersForSchool(String schoolId, String token);
 
     /**
      * Returns a list of student grade book entries for a given student and params
@@ -475,6 +485,15 @@ public interface APIClient {
      * @return
      */
     public List<GenericEntity> getStudentsForSection(String token, String sectionId);
+    
+    /**
+     * Get a list of students assigned to the specified school for a given params
+     * @param token
+     * @param schoolId
+     * @param params
+     * @return
+     */
+    public List<GenericEntity> getStudentsForSchool(String token, String schoolId, Map<String, String> params);
 
     /**
      * Get a list of students using name search
@@ -484,7 +503,7 @@ public interface APIClient {
      * @param lastName
      * @return
      */
-    public List<GenericEntity> getStudentsWithSearch(String token, String firstName, String lastName);
+    public List<GenericEntity> getStudentsWithSearch(String token, String firstName, String lastName, String schoolId);
 
     /**
      * Get a list of students in the specified section along with gradebook entries
@@ -579,7 +598,10 @@ public interface APIClient {
      */
     List<GenericEntity> getCoursesSectionsForSchool(String token, String schoolId);
 
-    public List<GenericEntity> getCourseSectionMappings(List<GenericEntity> sections, String token);
-   
-    
+    public List<GenericEntity> getCourseSectionMappings(List<GenericEntity> sections, String schoolId, String token);
+
+    public List<GenericEntity> readEntityList(String token, String url);
+
+    public GenericEntity readEntity(String token, String url);
+
 }
