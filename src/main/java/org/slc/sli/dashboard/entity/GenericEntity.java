@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-
 package org.slc.sli.dashboard.entity;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +37,35 @@ import org.slc.sli.dashboard.util.Constants;
  */
 public class GenericEntity extends LinkedHashMap<String, Object> implements Entity {
 
-    private static final long serialVersionUID = -1398693068211322783L;
+    private static final long serialVersionUID = 2295343600615753471L;
+
+    private final List<Link> links;
+    private final String entityType;
 
     public GenericEntity() {
         super();
+        links = new ArrayList<Link>();
+        entityType = null;
     }
 
+    @SuppressWarnings("unchecked")
     public GenericEntity(Map<String, Object> map) {
         super(map);
+        links = (List<Link>) map.get("links");
+        entityType = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public GenericEntity(Map<String, Object> map, String entityType) {
+        super(map);
+        this.entityType = entityType;
+        links = (List<Link>) map.get("links");
+    }
+
+    public GenericEntity(Entity copyFrom) {
+        super(copyFrom.getData());
+        this.entityType = copyFrom.getEntityType();
+        links = copyFrom.getLinks();
     }
 
     @Override
@@ -93,10 +115,17 @@ public class GenericEntity extends LinkedHashMap<String, Object> implements Enti
         put(key, list);
     }
 
+
+    @Override
+    public Object get(Object key) {
+        // TODO Just here for debugging remove
+        return super.get(key);
+    }
+
     // Entity Interface for SDK Integration
     @Override
     public String getEntityType() {
-        return null;
+        return entityType;
     }
 
     @Override
@@ -106,8 +135,32 @@ public class GenericEntity extends LinkedHashMap<String, Object> implements Enti
 
     @Override
     public List<Link> getLinks() {
-        if (getData().containsKey(Constants.ATTR_LINKS)) {
-            return (List<Link>) getData().get(Constants.ATTR_LINKS);
+        return links;
+    }
+    
+    public Link getLink(String linkName) {
+    	if (links == null){
+    		return null;
+    	}
+    	
+    	for(Link link : links) {
+    		if(link.getLinkName().equals(linkName)) {
+    			return link;
+    		}
+    	}
+    	
+    	return null;
+    }
+    
+    @Override
+    public Map<String, URL> getLinkMap() {
+        List<Link> links = getLinks();
+        if (links != null) {
+            Map<String, URL> linkMap = new HashMap<String, URL>();
+            for (Link link : links) {
+                linkMap.put(link.getLinkName(), link.getResourceURL());
+            }
+            return linkMap;
         }
         return null;
     }

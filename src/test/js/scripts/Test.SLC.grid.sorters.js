@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012 Shared Learning Collaborative, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /*global module test ok define equal deepEqual notEqual SLC $*/
 
 module("SLC.grid.sorters");
@@ -12,9 +28,17 @@ module("SLC.grid.sorters");
 		ok(typeof SLC.grid.sorters.Enum === 'function', 'SLC.grid.sorters Enum method should be function');
 	});
 	
+	var params = {
+		"fieldName": "StateTestWriting",
+		"name": "StateTest Writing",
+		"sortField": "assessments.StateTest Writing.Scale score",
+		"valueField": "Scale score"
+	};
+	
 	test('Test ProxyInt method', function () {
 		ok(SLC.grid.sorters.ProxyInt !== undefined, 'SLC.grid.sorters ProxyInt method should be defined');
 		ok(typeof SLC.grid.sorters.ProxyInt === 'function', 'SLC.grid.sorters ProxyInt method should be function');
+		equal(typeof SLC.grid.sorters.ProxyInt(params), "function");
 	});
 	
 	test('Test LetterGrade method', function () {

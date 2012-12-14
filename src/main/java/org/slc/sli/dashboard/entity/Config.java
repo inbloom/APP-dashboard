@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package org.slc.sli.dashboard.entity;
 
 import java.io.Serializable;
@@ -26,6 +25,8 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import org.slc.sli.dashboard.util.DashboardException;
 import org.slc.sli.dashboard.web.util.NoBadChars;
@@ -44,11 +45,13 @@ public class Config implements Cloneable, Serializable {
      * Type of components
      * set true: it will look up outside config file.
      * set false: it does not have outside config.
+     *
      * @author agrebneva
      *
      */
     public enum Type {
-        LAYOUT(true), PANEL(true), GRID(true), TREE(true), TAB(false), WIDGET(true), FIELD(false), EXPAND(false), REPEAT_HEADER_GRID(true);
+        LAYOUT(true), PANEL(true), GRID(true), TREE(true), TAB(false), WIDGET(true), FIELD(false), EXPAND(false), REPEAT_HEADER_GRID(
+                true);
 
         private boolean hasOwnConfig;
 
@@ -75,7 +78,8 @@ public class Config implements Cloneable, Serializable {
         private static final long serialVersionUID = 1L;
         @Pattern(regexp = "[a-zA-Z0-9 \\-/\\+()\"':]{0,150}")
         protected String description;
-        // Field is a json hierarchy with nodes delimited by period and can use optional single quote
+        // Field is a json hierarchy with nodes delimited by period and can use optional single
+        // quote
         @Pattern(regexp = "[a-zA-Z0-9 \\.\\-_\\\\]{0,100}")
         protected String field;
         @Pattern(regexp = "[a-zA-Z0-9 -/\\+()\"':]{0,150}")
@@ -94,10 +98,6 @@ public class Config implements Cloneable, Serializable {
         protected String sorter;
         @Pattern(regexp = "[a-zA-Z0-9 \\.\\-]")
         protected String align;
-
-        @NoBadChars
-        @Size(max = 30)
-        protected Map<String, Object> params;
 
         public String getDescription() {
             return description;
@@ -131,10 +131,6 @@ public class Config implements Cloneable, Serializable {
             return sorter;
         }
 
-        public Map<String, Object> getParams() {
-            return params;
-        }
-
         public String getDatatype() {
             return datatype;
         }
@@ -152,10 +148,11 @@ public class Config implements Cloneable, Serializable {
             Item item;
             try {
                 item = (Item) this.clone();
+                item.items = ArrayUtils.clone( items );
             } catch (CloneNotSupportedException e) {
                 throw new DashboardException("Unable to clone items", e);
             }
-            item.items = items;
+
             return item;
         }
 
@@ -241,8 +238,8 @@ public class Config implements Cloneable, Serializable {
             result = prime * result + (lazy ? 1231 : 1237);
             if (params != null) {
                 for (Object value : params.values()) {
-                      result = prime * result + ((value == null) ? 0 : value.hashCode());
-                  }
+                    result = prime * result + ((value == null) ? 0 : value.hashCode());
+                }
             }
             return result;
         }
@@ -316,7 +313,8 @@ public class Config implements Cloneable, Serializable {
     @Pattern(regexp = "[a-zA-Z0-9]{1,30}")
     protected String id;
     /**
-     * if id of the parent is different from the id - in case when many similar panels share the driver
+     * if id of the parent is different from the id - in case when many similar panels share the
+     * driver
      */
     @Pattern(regexp = "[a-zA-Z0-9]{0,30}")
     protected String parentId;
@@ -333,7 +331,12 @@ public class Config implements Cloneable, Serializable {
     @Pattern(regexp = "[a-zA-Z0-9 \\.\\-]{0,30}")
     protected String root;
 
-    public Config(String id, String parentId, String name, Type type, Condition condition, Data data, Item[] items, String root) {
+    @NoBadChars
+    @Size(max = 30)
+    protected Map<String, Object> params;
+
+    public Config(String id, String parentId, String name, Type type, Condition condition, Data data, Item[] items,
+            String root, Map<String, Object> params) {
         super();
         this.id = id;
         this.parentId = parentId;
@@ -341,8 +344,9 @@ public class Config implements Cloneable, Serializable {
         this.type = type;
         this.condition = condition;
         this.data = data;
-        this.items = items;
+        this.items = ArrayUtils.clone( items );
         this.root = root;
+        this.params = params;
     }
 
     public Config() {
@@ -380,8 +384,12 @@ public class Config implements Cloneable, Serializable {
         return items;
     }
 
+    public Map<String, Object> getParams() {
+        return params;
+    }
+
     public Config cloneWithItems(Item[] items) {
-        return new Config(id, parentId, name, type, condition, data, items, root);
+        return new Config(id, parentId, name, type, condition, data, items, root, params);
     }
 
     /**
@@ -397,10 +405,10 @@ public class Config implements Cloneable, Serializable {
      */
     public Config overWrite(Config customConfig) {
         // parent id for overwrite should be the same as id of the driver
-        Config config = new Config(this.id, this.id, customConfig.name, this.type, this.condition, new Data(this.data.entity,
-                customConfig.data.cacheKey, this.data.lazy, customConfig.data.params == null ? null
+        Config config = new Config(this.id, this.id, customConfig.name, this.type, this.condition, new Data(
+                this.data.entity, customConfig.data.cacheKey, this.data.lazy, customConfig.data.params == null ? null
                         : Collections.unmodifiableMap(new HashMap<String, Object>(customConfig.data.params))),
-                (customConfig.items == null) ? this.items : customConfig.items, this.root);
+                (customConfig.items == null) ? this.items : customConfig.items, this.root, this.params);
         return config;
     }
 }
