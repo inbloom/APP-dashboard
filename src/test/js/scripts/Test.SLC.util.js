@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012 Shared Learning Collaborative, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /*global module test ok define equal deepEqual notEqual SLC $*/
 module("SLC.util");
 
@@ -91,14 +107,14 @@ module("SLC.util");
 		ok(typeof SLC.util.checkAjaxError === 'function', 'SLC.util checkAjaxError method should be function');
 	});
 	
-	test('Test getPageUrl method', function () {
-		ok(SLC.util.getPageUrl !== undefined, 'SLC.util getPageUrl method should be defined');
-		ok(typeof SLC.util.getPageUrl === 'function', 'SLC.util getPageUrl method should be function');
+	test('Test goToLayout method', function () {
+		ok(SLC.util.goToLayout !== undefined, 'SLC.util goToLayout method should be defined');
+		ok(typeof SLC.util.goToLayout === 'function', 'SLC.util goToLayout method should be function');
 	});
 	
-	test('Test goToUrl method', function () {
-		ok(SLC.util.goToUrl !== undefined, 'SLC.util goToUrl method should be defined');
-		ok(typeof SLC.util.goToUrl === 'function', 'SLC.util goToUrl method should be function');
+	test('Test getLayoutLink method', function () {
+		ok(SLC.util.getLayoutLink !== undefined, 'SLC.util getLayoutLink method should be defined');
+		ok(typeof SLC.util.getLayoutLink === 'function', 'SLC.util getLayoutLink method should be function');
 	});
 	
 	test('Test checkCondition method', function () {
@@ -108,11 +124,11 @@ module("SLC.util");
 
 module("SLC.util displayErrorMessage & hideErrorMessage methods", {
 	setup: function () {
-		$("body").append("<div id=losError></div><div id=viewSelection></div>");
+		$("body").append("<div id=dsh_dv_error></div><div id=viewSelection></div>");
 	},
 	
 	teardown: function () {
-		$("#losError").remove();
+		$("#dsh_dv_error").remove();
 		$("#viewSelection").remove();
 	}
 });
@@ -123,8 +139,8 @@ module("SLC.util displayErrorMessage & hideErrorMessage methods", {
 		
 		SLC.util.displayErrorMessage("test error");
 		
-		equal($("#losError").css("display"), "block");
-		equal($("#losError").html(), "test error");
+		equal($("#dsh_dv_error").css("display"), "block");
+		equal($("#dsh_dv_error").html(), "test error");
 		equal($("#viewSelection").css("display"), "none");
 	});
 	
@@ -133,7 +149,7 @@ module("SLC.util displayErrorMessage & hideErrorMessage methods", {
 		ok(typeof SLC.util.hideErrorMessage === 'function', 'SLC.util hideErrorMessage method should be function');
 		
 		SLC.util.hideErrorMessage();
-		equal($("#losError").css("display"), "none");
+		equal($("#dsh_dv_error").css("display"), "none");
 	});
 	
 module("SLC.util renderLozenges method", {
@@ -246,12 +262,7 @@ module("SLC.util get methods", {
 		ok(typeof SLC.util.getElementHeight === 'function', 'SLC.util getElementHeight method should be function');
 		deepEqual(typeof SLC.util.getElementHeight("#test"), 'number', 'SLC.util getElementHeight method should return a number');
 	});
-	
-	test('Test getData method', function () {
-		ok(SLC.util.getData !== undefined, 'SLC.util getData method should be defined');
-		ok(typeof SLC.util.getData === 'function', 'SLC.util getData method should be function');
-	});
-	
+
 
 module("SLC.util setDropDownOptions & selectDropDownOption methods", {
 	setup: function () {
