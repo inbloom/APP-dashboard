@@ -26,7 +26,7 @@ For the purposes of this README, we will use /opt/tomcat as $TOMCAT_HOME
        - Click the Admin button in the top right
          Click Application Registration
        - Point your dashboard application to the correct urls:
-         URL == http://YOUR_IP_ADDRESS:Port/dashboard/service/layout/listOfStudentsPage
+         URL == http://YOUR_IP_ADDRESS:Port/dashboard
          Redirect URL == http://YOUR_IP_ADDRESS:Port/dashboard/callback
 
    C  Copy Down Client Secret and Client ID
