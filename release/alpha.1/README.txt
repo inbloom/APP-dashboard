@@ -59,7 +59,7 @@ For the purposes of this README, we will use /opt/tomcat as $TOMCAT_HOME
           keytool -genseckey -alias $YOUR_ALIAS_NAME -keypass $YOUR_ALIAS_PASSWORD -keystore $YOUR_KEYSTORE_NAME-keystore.jks -storepass $YOUR_Keytore_PASSWORD -storetype JCEKS -keysize 256 -keyalg AES
           * Note: Do not change storetype, keysize or keyalg arguments.
       - Using EncryptionGenerator.jar (included), run the following command:
-          java -jar EncyptionGenerator.jar <location_of_keyStore> < keystore_password> <key_alias> <key_password> <string_to_encrypt>
+          java -jar encryption-tool-1.0-SNAPSHOT.jar <location_of_keyStore> <keystore_password> <key_alias> <key_password> <string_to_encrypt>
           Output will be the encrypted string.  Make sure you encrypt both client_id, and secret, separately.
       - Point the redirect URL to the dashboard's callback, then 
         copy the encrypted strings to dashboard.properties for
