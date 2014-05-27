@@ -1,4 +1,9 @@
-*Dashboard*
+APP-Dashboard
+
+
+Copyright 2012 inBloom, Inc.
+
+This product includes software developed by inBloom (http://www.inbloom.org/).
 
 
 Licensed under the Apache License, Version 2.0 (the "License");
