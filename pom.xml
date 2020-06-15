@@ -37,7 +37,7 @@
         <servlet-api.version>2.4</servlet-api.version>
         <ehcache-core.version>2.5.2</ehcache-core.version>
         <jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
-        <hibernate.validator.version>4.2.0.Final</hibernate.validator.version>
+        <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
         <easymock.version>3.0</easymock.version>
         <sli.client-api.version>1.0-SNAPSHOT</sli.client-api.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
